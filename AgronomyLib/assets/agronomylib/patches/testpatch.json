@@ -1,0 +1,45 @@
+[
+    {
+        "enabled": true,
+        "file": "game:blocktypes/plant/crop/rye",
+        "op": "AddMerge",
+        "path": "/entityClass",
+        "value": "Generic"
+    },
+    {
+        "enabled": true,
+        "file": "game:blocktypes/plant/crop/rye",
+        "op": "AddMerge",
+        "path": "/entityBehaviors",
+        "value": [
+            {
+                "name": "AgronomyLib.RequiresVernalization",
+                "properties": {
+                    "maxStageBeforeVernalization": 4,
+                    "minStageBeforeVernalization": 2,
+                    "vernalizationHours": { "avg": 100, "var": 10 },
+                    "vernalizationTemp": { "avg": 4, "var": 1 }
+                }
+            }
+        ]
+    },
+    {
+        // Rye is much more cold-tolerant IRL than in Vintage Story. As our only vanilla winter annual, we should fix that.
+        "file": "game:blocktypes/plant/crop/rye",
+        "op": "Replace",
+        "path": "/cropProps/coldDamageBelow",
+        "value": -24
+    },
+
+
+    {
+        "file": "game:blocktypes/plant/crop/cabbage",
+        "op": "AddMerge",
+        "path": "/behaviors",
+        "value": [
+            {
+                "name": "AgronomyLib.Unscytheable"
+            }
+        ]
+    }
+]

@@ -1,0 +1,13 @@
+[
+    {
+        "file": "game:blocktypes/soil/farmland",
+        "op": "AddMerge",
+        "path": "/entityBehaviors",
+        "value": [
+            {
+                "name": "AgronomyLib.AgronomyFarmland",
+            },
+        ]
+    }
+
+]
