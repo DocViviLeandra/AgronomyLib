@@ -23,31 +23,8 @@ namespace AgronomyLib {
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(BlockEntityFarmland.TryGrowCrop))]
-        public static bool TryGrowCropPrefix(ref BlockEntityFarmland __instance, bool __result, double currentTotalHours) {
-            // Allows BlockEntityBehaviors attached to the crop entity to influence TryGrowCrop without requiring a separate CropBehavior.
-            // Also allows such overrides to work even if the crop is "fully grown"!
-            ICoreAPI api = __instance.Api;
-
-            bool result = true;
-            EnumHandling handling = EnumHandling.PassThrough;
-            if (api.World.BlockAccessor.GetBlockEntity(__instance.UpPos) is BlockEntity be) {
-                foreach (BlockEntityBehavior behavior in be.Behaviors) {
-                    if (behavior is BlockEntityBehaviorAgronomyCropBase cropBehavior) {
-                        result = cropBehavior.TryGrowCrop(api, __instance, currentTotalHours, ref handling);
-                        if (handling == EnumHandling.PreventSubsequent) {
-                            __result = result;
-                            return false;
-                        }
-                    }
-                }
-
-                if (handling == EnumHandling.PreventDefault) {
-                    __result = result;
-                    return false;
-                }
-            }
-
-            return true;
+        public static bool TryGrowCropPrefix(ref BlockEntityFarmland __instance, ref bool __result, double currentTotalHours) {
+            return FarmlandMethods.TryGrowCropOverrides(ref __instance, ref __result, currentTotalHours);
         }
     }
 }

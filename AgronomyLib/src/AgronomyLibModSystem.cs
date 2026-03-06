@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using AgronomyLib;
+using HarmonyLib;
 using System.Reflection;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -22,6 +23,8 @@ namespace AgronomyLib
         {
             // Mod.Logger.Notification("Hello from template mod: " + api.Side);
 
+            RegisterBlocks(api);
+            RegisterBlockEntities(api);
             RegisterBlockBehaviors(api);
             RegisterBlockEntityBehaviors(api);
 
@@ -47,7 +50,17 @@ namespace AgronomyLib
             harmony?.UnpatchAll(Mod.Info.ModID);
         }
 
+        private void RegisterBlocks(ICoreAPI api) {
+
+        }
+
+        private void RegisterBlockEntities(ICoreAPI api) {
+
+        }
+
         private void RegisterBlockBehaviors(ICoreAPI api) {
+            api.RegisterBlockBehaviorClass($"{classPrefix}.{BlockBehaviorHasRoots.className}", typeof(BlockBehaviorHasRoots));
+            api.RegisterBlockBehaviorClass($"{classPrefix}.{BlockBehaviorRegrowsFromRoots.className}", typeof(BlockBehaviorRegrowsFromRoots));
             api.RegisterBlockBehaviorClass($"{classPrefix}.{BlockBehaviorUnscytheable.className}", typeof(BlockBehaviorUnscytheable));
         }
 

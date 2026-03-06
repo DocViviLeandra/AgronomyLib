@@ -47,8 +47,6 @@ namespace AgronomyLib {
         public override void Initialize(ICoreAPI api, JsonObject properties) {
             base.Initialize(api, properties);
 
-            api.Logger.Debug("Initializing entityBehavior RequiresVernalization...");
-
             RegisterCropType(api, properties);
 
             BlockEntityFarmland bef;
@@ -92,6 +90,7 @@ namespace AgronomyLib {
             if (totalDays - vState.lastTickTotalDays < stateUpdateIntervalDays) return vState;
 
             var baseClimate = Api.World.BlockAccessor.GetClimateAt(Pos, EnumGetClimateMode.WorldGenValues);
+            if (baseClimate == null) return vState; // Region not yet loaded, we cannot continue
 
             int prevIntDays = -99;
             float middayTemp = 0;

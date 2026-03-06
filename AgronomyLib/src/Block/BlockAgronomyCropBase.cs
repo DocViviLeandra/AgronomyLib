@@ -9,18 +9,12 @@ using Vintagestory.GameContent;
 
 namespace AgronomyLib {
     /// <summary>
-    /// Base class for AgronomyLib's BlockEntityBehaviors for crops.
+    /// Base class for AgronomyLib's Block classes for crops (and things that pretend to be crops to fool the vanilla code)
     /// </summary>
-    public abstract class BlockEntityBehaviorAgronomyCropBase : BlockEntityBehavior, ICropGrowing, IFarmlandInfo {
-
-        public BlockEntityBehaviorAgronomyCropBase(BlockEntity be) : base(be) { }
+    public abstract class BlockAgronomyCropBase : BlockCrop, ICropGrowing {
 
         public virtual bool TryGrowCrop(ICoreAPI api, IFarmlandBlockEntity farmland, double currentTotalHours, ref EnumHandling handling) {
             return true;
-        }
-
-        public virtual void GetFarmlandInfo(IPlayer forPlayer, StringBuilder dsc) {
-
         }
     }
 }

@@ -11,15 +11,15 @@ namespace AgronomyLib {
     /// <summary>
     /// Base class for AgronomyLib's BlockEntityBehaviors for crops.
     /// </summary>
-    public abstract class BlockEntityBehaviorAgronomyCropBase : BlockEntityBehavior, ICropGrowing, IFarmlandInfo {
+    public abstract class BlockBehaviorAgronomyCropBase : BlockBehavior, ICropGrowing {
 
-        public BlockEntityBehaviorAgronomyCropBase(BlockEntity be) : base(be) { }
+        public BlockBehaviorAgronomyCropBase(Block block) : base(block) { }
 
         public virtual bool TryGrowCrop(ICoreAPI api, IFarmlandBlockEntity farmland, double currentTotalHours, ref EnumHandling handling) {
             return true;
         }
 
-        public virtual void GetFarmlandInfo(IPlayer forPlayer, StringBuilder dsc) {
+        public virtual void OnCropDeath(IWorldAccessor world, BlockPos pos, EnumCropStressType deathReason, ref EnumHandling handling) {
 
         }
     }
