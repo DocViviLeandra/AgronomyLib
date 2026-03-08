@@ -23,12 +23,6 @@
             }
         ]
     },
-    {
-        "file": "game:blocktypes/plant/crop/rye",
-        "op": "Replace",
-        "path": "/class",
-        "value": "TestBlockCrop"
-    },
 
 
     {
