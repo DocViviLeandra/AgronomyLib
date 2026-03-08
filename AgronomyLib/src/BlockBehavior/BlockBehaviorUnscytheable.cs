@@ -20,7 +20,7 @@ namespace AgronomyLib {
     /// ]
     /// </code>
     /// </example>
-    public class BlockBehaviorUnscytheable : BlockBehaviorAgronomyCropBase {
+    public class BlockBehaviorUnscytheable : BlockBehavior {
         #region keys
         public static readonly string className = "Unscytheable";
         #endregion

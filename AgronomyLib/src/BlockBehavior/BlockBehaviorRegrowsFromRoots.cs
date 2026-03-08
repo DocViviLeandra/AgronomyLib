@@ -10,6 +10,8 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
+#nullable disable
+
 namespace AgronomyLib {
     /// <summary>
     /// When a crop with this behavior dies, it leaves behind a 'Roots' block that can sprout into a new instance of the crop.
@@ -31,7 +33,7 @@ namespace AgronomyLib {
     /// ]
     /// </code>
     /// </example>
-    public class BlockBehaviorRegrowsFromRoots : BlockBehaviorAgronomyCropBase, IRootsBehavior {
+    public class BlockBehaviorRegrowsFromRoots : BlockBehavior {
         #region keys
         internal static readonly string className = "RegrowsFromRoots";
         #endregion
@@ -100,29 +102,6 @@ namespace AgronomyLib {
             if (RegrowBelowTemp == float.MaxValue) {
                 RegrowBelowTemp = block?.CropProps.HeatDamageAbove ?? 50;
             }
-        }
-
-        public virtual bool OnRootsUpdate(IWorldAccessor world, BlockPos pos, ref RootState rootState, ref string currentCropRootsKey, float temp, ref EnumHandling handling) {
-            if (rootState.crownDeadHours > MonthsToRegrow * world.Calendar.HoursPerDay * world.Calendar.DaysPerMonth) {
-                if (temp > RegrowAboveTemp && temp < RegrowBelowTemp) {
-                    BlockEntityFarmland? farmland = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityFarmland;
-                    if (farmland == null) return false;
-
-                    Block cropToPlant = world.GetBlock(rootState.CropBlock.CodeWithVariant("stage", "1"));
-
-                    // TODO: More robust checking/handling
-                    if (farmland.CanPlant()) {
-                        // Avoid triggering OnBlockPlaced because we're not actually creating a new crop, just regrowing it
-                        world.BlockAccessor.ExchangeBlock(cropToPlant.BlockId, pos);
-                        rootState.IsCurrentCrop = true;
-                        currentCropRootsKey = rootState.GenerateID(world.Api);
-                    }
-
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

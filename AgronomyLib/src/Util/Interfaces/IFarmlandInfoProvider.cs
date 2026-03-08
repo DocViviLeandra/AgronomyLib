@@ -10,7 +10,7 @@ namespace AgronomyLib {
     /// <summary>
     /// Allows something to specify additional info that should be displayed in the farmland it is attached to.
     /// </summary>
-    public interface IFarmlandInfo  {
+    public interface IFarmlandInfoProvider  {
         /// <summary>
         /// Get any info the behavior wants to add to the farmland.
         /// </summary>

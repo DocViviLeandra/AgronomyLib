@@ -24,6 +24,14 @@
         ]
     },
     {
+        "file": "game:blocktypes/plant/crop/rye",
+        "op": "Replace",
+        "path": "/class",
+        "value": "TestBlockCrop"
+    },
+
+
+    {
         // Rye is much more cold-tolerant IRL than in Vintage Story. As our only vanilla winter annual, we should fix that.
         "file": "game:blocktypes/plant/crop/rye",
         "op": "Replace",
@@ -40,9 +48,6 @@
             {
                 "name": "AgronomyLib.Unscytheable"
             },
-            {
-                "name": "AgronomyLib.HasRoots"
-            }
         ]
     },
 ]

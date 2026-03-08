@@ -30,7 +30,7 @@ namespace AgronomyLib {
     /// ]
     /// </code>
     /// </example>
-    public class BlockEntityBehaviorRequiresVernalization : BlockEntityBehaviorAgronomyCropBase {
+    public class BlockEntityBehaviorRequiresVernalization : BlockEntityBehavior, ICropGrowthBEBehavior, IFarmlandInfoProvider  {
         #region keys
         internal static readonly string className = "RequiresVernalization";
         #endregion
@@ -118,9 +118,7 @@ namespace AgronomyLib {
             return vState;
         }
 
-        public override bool TryGrowCrop(ICoreAPI api, IFarmlandBlockEntity farmland, double currentTotalHours, ref EnumHandling handling) {
-            bool val = base.TryGrowCrop(api, farmland, currentTotalHours, ref handling);
-
+        public virtual bool BeforeTryGrowCrop(ICoreAPI api, IFarmlandBlockEntity farmland, double currentTotalHours, ref EnumHandling handling) {
             VernalizationState vState = UpdateAndGetVernalizationState();
 
             if (crop.CurrentCropStage < vState.MaxStageBeforeVernalization) return true;
@@ -143,8 +141,7 @@ namespace AgronomyLib {
             }
         }
 
-        public override void GetFarmlandInfo(IPlayer forPlayer, StringBuilder dsc) {
-            base.GetFarmlandInfo(forPlayer, dsc);
+        public virtual void GetFarmlandInfo(IPlayer forPlayer, StringBuilder dsc) {
 
             VernalizationState vState = UpdateAndGetVernalizationState();
 

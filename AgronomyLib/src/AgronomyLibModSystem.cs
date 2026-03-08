@@ -45,13 +45,12 @@ namespace AgronomyLib
         }
 
         public override void Dispose() {
-            base.Dispose();
-
             harmony?.UnpatchAll(Mod.Info.ModID);
+            harmony = null;
         }
 
         private void RegisterBlocks(ICoreAPI api) {
-
+            api.RegisterBlockClass("TestBlockCrop", typeof(TestBlockCrop));
         }
 
         private void RegisterBlockEntities(ICoreAPI api) {
@@ -59,14 +58,15 @@ namespace AgronomyLib
         }
 
         private void RegisterBlockBehaviors(ICoreAPI api) {
-            api.RegisterBlockBehaviorClass($"{classPrefix}.{BlockBehaviorHasRoots.className}", typeof(BlockBehaviorHasRoots));
-            api.RegisterBlockBehaviorClass($"{classPrefix}.{BlockBehaviorRegrowsFromRoots.className}", typeof(BlockBehaviorRegrowsFromRoots));
+            api.RegisterBlockBehaviorClass($"{classPrefix}.{BlockBehaviorHarvestableByTool.className}", typeof(BlockBehaviorHarvestableByTool));
+            api.RegisterBlockBehaviorClass($"{classPrefix}.{BlockBehaviorSaltTolerant.className}", typeof(BlockBehaviorHarvestableByTool));
             api.RegisterBlockBehaviorClass($"{classPrefix}.{BlockBehaviorUnscytheable.className}", typeof(BlockBehaviorUnscytheable));
         }
 
         private void RegisterBlockEntityBehaviors(ICoreAPI api) {
-            api.RegisterBlockEntityBehaviorClass($"{classPrefix}.{BlockEntityBehaviorRequiresVernalization.className}", typeof(BlockEntityBehaviorRequiresVernalization));
             api.RegisterBlockEntityBehaviorClass($"{classPrefix}.{BlockEntityBehaviorAgronomyFarmland.className}", typeof(BlockEntityBehaviorAgronomyFarmland));
+
+            api.RegisterBlockEntityBehaviorClass($"{classPrefix}.{BlockEntityBehaviorRequiresVernalization.className}", typeof(BlockEntityBehaviorRequiresVernalization));
         }
     }
 }
