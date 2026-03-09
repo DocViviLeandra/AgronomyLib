@@ -9,7 +9,7 @@ namespace AgronomyLib {
     /// <summary>
     /// An interface which allows a <see cref="BlockBehavior"/> to specify behavior on the death of a crop, either instead of or in addition to default behavior
     /// </summary>
-    public interface ICropDeathBehavior {
+    public interface IBehaviorCropDeath {
         /// <summary>
         /// 
         /// </summary>

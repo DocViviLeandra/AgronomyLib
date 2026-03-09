@@ -64,8 +64,6 @@
 
 <ItemGroup>
   <Folder Include="assets\agronomylib\blocktypes\" />
-  <Folder Include="src\BlockEntity\" />
-  <Folder Include="src\Block\" />
 </ItemGroup>
 
 </Project>

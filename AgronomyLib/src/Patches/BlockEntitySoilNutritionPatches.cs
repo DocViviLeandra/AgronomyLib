@@ -79,7 +79,7 @@ namespace AgronomyLib {
                 // Perform salt exposure reactions
                 EnumHandling handled = EnumHandling.PassThrough;
                 foreach (BlockBehavior blockBehavior in upblock.BlockBehaviors) {
-                    if (blockBehavior is ISaltExposureBehavior seBlockBehavior) {
+                    if (blockBehavior is IBehaviorSaltExposure seBlockBehavior) {
                         seBlockBehavior.OnSaltExposure(Api.World, __instance.UpPos, ref handled);
                         if (handled == EnumHandling.PreventSubsequent) break;
                     }

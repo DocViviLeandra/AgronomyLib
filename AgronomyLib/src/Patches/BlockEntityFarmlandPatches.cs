@@ -36,7 +36,7 @@ namespace AgronomyLib {
                 ___unripeHeatDamaged = false;
                 for (int i = 0; i < ___damageAccum.Length; i++) ___damageAccum[i] = 0;
             } else {
-                BlockCropProperties? cProps = cropBlock?.GetCropProps();
+                BlockCropProperties? cProps = cropBlock?.GetCropProps(Api.World, __instance.UpPos);
                 if (cProps != null && conds.Temperature < cProps.ColdDamageBelow) {
                     if (hasRipeCrop) {
                         ___ripeCropColdDamaged = true;
@@ -71,9 +71,15 @@ namespace AgronomyLib {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(BlockEntityFarmland.TryGrowCrop))]
         public static bool TryGrowCropPrefix(ref BlockEntityFarmland __instance, ref bool __result, double currentTotalHours) {
-            ICoreAPI Api = __instance.Api;
+            Block cropBlock = __instance.GetCrop();
 
-            if (!FarmlandMethods.BeforeTryGrowCropCaller(ref __instance, ref __result, currentTotalHours)) {
+            // Execute behaviors that run before TryGrowCrop
+            __result = FarmlandMethods.BeforeTryGrowCropCaller(ref __instance,  cropBlock, currentTotalHours, out bool preventDefault);
+            if (preventDefault) return false;
+            
+            if (cropBlock is IBlockCropGrowth blockCG) {
+                // If the crop block implements IBlockCropGrowth, it provides its own logic for TryGrowCrop
+                __result = blockCG.TryGrowCrop(__instance, currentTotalHours);
                 return false;
             }
 
@@ -83,7 +89,17 @@ namespace AgronomyLib {
         [HarmonyPostfix]
         [HarmonyPatch(nameof(BlockEntityFarmland.TryGrowCrop))]
         public static void TryGrowCropPostfix(ref BlockEntityFarmland __instance, ref bool __result, double currentTotalHours) {
-            FarmlandMethods.OnGrowthCaller(ref __instance, __result, currentTotalHours);
+            Block cropBlock = __instance.GetCrop();
+
+            // Execute behaviors that run after TryGrowCrop
+            FarmlandMethods.OnGrowthCaller(ref __instance, cropBlock, __result, currentTotalHours);
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(BlockEntityFarmland.GetCropStage))]
+        public static bool GetCropStagePrefix(ref BlockEntityFarmland __instance, ref int __result, Block block) {
+            __result = block.GetCurrentCropStage(__instance.Api.World, __instance.UpPos);
+            return false;
         }
     }
 }

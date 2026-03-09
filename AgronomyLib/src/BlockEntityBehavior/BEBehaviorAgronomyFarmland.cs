@@ -51,10 +51,10 @@ namespace AgronomyLib {
 
             // Get the block info that the crop wants to append!
             if (Api.World.BlockAccessor.GetBlockEntity(farmland.UpPos) is BlockEntity cropBlockEntity) {
-                if (cropBlockEntity is IFarmlandInfoProvider infoEntity) infoEntity.GetFarmlandInfo(forPlayer, dsc);
+                if (cropBlockEntity is IProvidesFarmlandInfo infoEntity) infoEntity.GetFarmlandInfo(forPlayer, dsc);
 
                 foreach (BlockEntityBehavior beh in cropBlockEntity.Behaviors) {
-                    if (beh is IFarmlandInfoProvider infoBehavior) infoBehavior.GetFarmlandInfo(forPlayer, dsc);
+                    if (beh is IProvidesFarmlandInfo infoBehavior) infoBehavior.GetFarmlandInfo(forPlayer, dsc);
                 }
             }
 

@@ -8,7 +8,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
 namespace AgronomyLib {
-    public class BlockBehaviorSaltTolerant : BlockBehavior, ISaltExposureBehavior, ICropYieldBehavior {
+    public class BlockBehaviorSaltTolerant : BlockBehavior, IBehaviorSaltExposure, IBehaviorCropYield {
         #region keys
         internal static readonly string className = "SaltTolerant";
         #endregion
@@ -38,6 +38,7 @@ namespace AgronomyLib {
         }
 
         public float GetYieldMul(IWorldAccessor world, BlockPos pos) {
+            // TODO: Figure out a way to get salt exposure status
             return 1.0f;
         }
     }

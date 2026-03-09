@@ -30,7 +30,7 @@ namespace AgronomyLib {
     /// ]
     /// </code>
     /// </example>
-    public class BlockEntityBehaviorRequiresVernalization : BlockEntityBehavior, ICropGrowthBEBehavior, IFarmlandInfoProvider  {
+    public class BlockEntityBehaviorRequiresVernalization : BlockEntityBehavior, IBlockEntityBehaviorCropGrowth, IProvidesFarmlandInfo  {
         #region keys
         internal static readonly string className = "RequiresVernalization";
         #endregion
@@ -40,7 +40,7 @@ namespace AgronomyLib {
         protected VernalizationState vState;
 
         public BlockEntity be => Blockentity;
-        public BlockCrop crop => Block as BlockCrop;
+        public BlockCrop crop => Block as BlockCrop; // TODO: Change this to something more versatile
 
         public BlockEntityBehaviorRequiresVernalization(BlockEntity be) : base(be) { }
 
@@ -118,7 +118,7 @@ namespace AgronomyLib {
             return vState;
         }
 
-        public virtual bool BeforeTryGrowCrop(ICoreAPI api, IFarmlandBlockEntity farmland, double currentTotalHours, ref EnumHandling handling) {
+        public virtual bool BeforeTryGrowCrop(BlockEntityFarmland farmland, double currentTotalHours, ref EnumHandling handling) {
             VernalizationState vState = UpdateAndGetVernalizationState();
 
             if (crop.CurrentCropStage < vState.MaxStageBeforeVernalization) return true;
@@ -128,6 +128,8 @@ namespace AgronomyLib {
                 return false;
             }
         }
+
+        public virtual void OnGrowth(BlockEntityFarmland farmland, double currentTotalHours, bool wasGrown, ref EnumHandling handling) { }
 
         public override void GetBlockInfo(IPlayer forPlayer, StringBuilder dsc) {
             base.GetBlockInfo(forPlayer, dsc);

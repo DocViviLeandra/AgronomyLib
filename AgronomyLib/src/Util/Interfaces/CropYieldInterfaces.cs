@@ -9,7 +9,7 @@ namespace AgronomyLib {
     /// <summary>
     /// Interface that allows a <see cref="BlockBehavior"/> to modify the yield of a crop.
     /// </summary>
-    public interface ICropYieldBehavior {
+    public interface IBehaviorCropYield {
         /// <summary>
         /// Returns a multiplier to be applied to the crop's yield
         /// </summary>
@@ -22,7 +22,7 @@ namespace AgronomyLib {
     /// <summary>
     /// Interface that allows a <see cref="BlockEntityBehavior"/> to modify the yield of a crop.
     /// </summary>
-    public interface ICropYieldBEBehavior {
+    public interface IBEBehaviorCropYield {
         /// <summary>
         /// Returns a multiplier to be applied to the crop's yield
         /// </summary>

@@ -9,7 +9,7 @@ namespace AgronomyLib {
     /// <summary>
     /// Interface to indicate a <see cref="BlockBehavior"/> (for crops) has some special interaction with being exposed to salt, instead of or in addition to taking damage from it.
     /// </summary>
-    public interface ISaltExposureBehavior {
+    public interface IBehaviorSaltExposure {
 
         public abstract void OnSaltExposure(IWorldAccessor world, BlockPos pos, ref EnumHandling handled);
     }

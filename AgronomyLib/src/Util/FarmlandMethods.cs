@@ -11,74 +11,64 @@ using Vintagestory.GameContent;
 namespace AgronomyLib {
     internal static class FarmlandMethods {
 
-        internal static bool BeforeTryGrowCropCaller(ref BlockEntityFarmland farmland, ref bool __result, double currentTotalHours) {
+        internal static bool BeforeTryGrowCropCaller(ref BlockEntityFarmland farmland, Block block, double currentTotalHours, out bool preventDefault) {
             // Allows BlockEntityBehaviors attached to the crop entity to influence TryGrowCrop without requiring a separate CropBehavior.
             // Also allows such overrides to work even if the crop is "fully grown"!
             ICoreAPI api = farmland.Api;
 
             bool result = true;
-            EnumHandling handling = EnumHandling.PassThrough;
-
-            Block block = api.World.BlockAccessor.GetBlock(farmland.UpPos);
+            preventDefault = false;
 
             // Iterate through BlockBehaviors and apply any that influence TryGrowCrop
-            foreach (BlockBehavior bh in block.BlockBehaviors) {
-                if (bh is ICropGrowthBehavior bhOverriding) {
-                    result = bhOverriding.BeforeTryGrowCrop(api.World, farmland.UpPos, currentTotalHours, ref handling);
-                    if (handling == EnumHandling.PreventSubsequent) {
-                        __result = result;
-                        return false;
-                    }
+            foreach (BlockBehavior behavior in block.BlockBehaviors) {
+                if (behavior is IBehaviorCropGrowth behaviorCG) {
+                    EnumHandling handling = EnumHandling.PassThrough;
+                    bool tempResult = behaviorCG.BeforeTryGrowCrop(farmland, currentTotalHours, ref handling);
+                    if (handling != EnumHandling.PassThrough) result = tempResult;
+                    if (handling == EnumHandling.PreventDefault || handling == EnumHandling.PreventSubsequent) preventDefault = true;
+                    if (handling == EnumHandling.PreventSubsequent) return result;
                 }
             }
 
             // Apply anything done by the crop's entity's BlockEntityBehaviors
             if (api.World.BlockAccessor.GetBlockEntity(farmland.UpPos) is BlockEntity be) {
                 foreach (BlockEntityBehavior behavior in be.Behaviors) {
-                    if (behavior is ICropGrowthBEBehavior behOverriding) {
-                        result = behOverriding.BeforeTryGrowCrop(currentTotalHours, ref handling);
-                        if (handling == EnumHandling.PreventSubsequent) {
-                            __result = result;
-                            return false;
-                        }
+                    if (behavior is IBlockEntityBehaviorCropGrowth bebehaviorCG) {
+                        EnumHandling handling = EnumHandling.PassThrough;
+                        bool tempResult = bebehaviorCG.BeforeTryGrowCrop(farmland, currentTotalHours, ref handling);
+                        if (handling != EnumHandling.PassThrough) result = tempResult;
+                        if (handling == EnumHandling.PreventDefault || handling == EnumHandling.PreventSubsequent) preventDefault = true;
+                        if (handling == EnumHandling.PreventSubsequent) return result;
                     }
                 }
             }
 
-            if (handling == EnumHandling.PreventDefault) {
-                __result = result;
-                return false;
-            }
-
-            return true;
+            return result;
         }
 
-        internal static void OnGrowthCaller(ref BlockEntityFarmland farmland, bool wasGrown, double currentTotalHours) {
+        internal static void OnGrowthCaller(ref BlockEntityFarmland farmland, Block block, bool wasGrown, double currentTotalHours) {
             ICoreAPI api = farmland.Api;
 
-            bool result = true;
-            EnumHandling handling = EnumHandling.PassThrough;
-
-            Block block = api.World.BlockAccessor.GetBlock(farmland.UpPos);
+            bool preventDefault = false;
 
             // Iterate through BlockBehaviors and apply any that influence TryGrowCrop
-            foreach (BlockBehavior bh in block.BlockBehaviors) {
-                if (bh is ICropGrowthBehavior supplyingBehavior) {
-                    supplyingBehavior.OnGrowth(api.World, farmland.UpPos, currentTotalHours, wasGrown, ref handling);
-                    if (handling == EnumHandling.PreventSubsequent) {
-                        return;
-                    }
+            foreach (BlockBehavior behavior in block.BlockBehaviors) {
+                if (behavior is IBehaviorCropGrowth behaviorCG) {
+                    EnumHandling handling = EnumHandling.PassThrough;
+                    behaviorCG.OnGrowth(farmland, currentTotalHours, wasGrown, ref handling);
+                    if (handling == EnumHandling.PreventDefault || handling == EnumHandling.PreventSubsequent) preventDefault = true;
+                    if (handling == EnumHandling.PreventSubsequent) return;
                 }
             }
 
             // Apply anything done by the crop's entity's BlockEntityBehaviors
             if (api.World.BlockAccessor.GetBlockEntity(farmland.UpPos) is BlockEntity be) {
                 foreach (BlockEntityBehavior behavior in be.Behaviors) {
-                    if (behavior is ICropGrowthBEBehavior supplyingBEBehavior) {
-                        supplyingBEBehavior.OnGrowth(currentTotalHours, wasGrown, ref handling);
-                        if (handling == EnumHandling.PreventSubsequent) {
-                            return;
-                        }
+                    if (behavior is IBlockEntityBehaviorCropGrowth bebehaviorCG) {
+                        EnumHandling handling = EnumHandling.PassThrough;
+                        bool tempResult = bebehaviorCG.BeforeTryGrowCrop(farmland, currentTotalHours, ref handling);
+                        if (handling == EnumHandling.PreventDefault || handling == EnumHandling.PreventSubsequent) preventDefault = true;
+                        if (handling == EnumHandling.PreventSubsequent) return;
                     }
                 }
             }
@@ -91,7 +81,7 @@ namespace AgronomyLib {
             EnumHandling handling = EnumHandling.PassThrough;
             bool result = false;
             foreach(BlockBehavior behavior in cropBlock.BlockBehaviors) {
-                if (behavior is ICropDeathBehavior cropDeathBehavior) {
+                if (behavior is IBehaviorCropDeath cropDeathBehavior) {
                     result = cropDeathBehavior.OnCropDeath(world, pos, deathReason, ref handling);
                     if (handling == EnumHandling.PreventSubsequent) {
                         return result;
