@@ -11,6 +11,7 @@ using Vintagestory.GameContent;
 
 namespace AgronomyLib {
 
+    // TODO: Salt exposure tracking has some flaws that need to be corrected, such as displaying when there isn't actually a crop in the farmland.
     [HarmonyPatch(typeof(BlockEntitySoilNutrition))]
     public static class BlockEntitySoilNutritionPatches {
         #region helpers
@@ -32,7 +33,7 @@ namespace AgronomyLib {
         private static dynamic? EWSRNotFound => BESoilNutritionHelper.EnumWaterSearchResultGetter(1);
         private static dynamic? EWSRDeferred => BESoilNutritionHelper.EnumWaterSearchResultGetter(2);
 
-
+        
         [HarmonyPostfix]
         [HarmonyPatch(nameof(BlockEntitySoilNutrition.OnCropBlockBroken))]
         public static void OnCropBlockBrokenPostfix(ref bool ___saltExposed) {
