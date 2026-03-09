@@ -50,7 +50,7 @@ namespace AgronomyLib
         }
 
         private void RegisterBlocks(ICoreAPI api) {
-            api.RegisterBlockClass("TestBlockCrop", typeof(TestBlockCrop));
+            
         }
 
         private void RegisterBlockEntities(ICoreAPI api) {

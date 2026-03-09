@@ -56,7 +56,7 @@ namespace AgronomyLib {
                 if (behavior is IBehaviorCropGrowth behaviorCG) {
                     EnumHandling handling = EnumHandling.PassThrough;
                     behaviorCG.OnGrowth(farmland, currentTotalHours, wasGrown, ref handling);
-                    if (handling == EnumHandling.PreventDefault || handling == EnumHandling.PreventSubsequent) preventDefault = true;
+                    if (handling == EnumHandling.PreventDefault) preventDefault = true;
                     if (handling == EnumHandling.PreventSubsequent) return;
                 }
             }
@@ -67,37 +67,11 @@ namespace AgronomyLib {
                     if (behavior is IBlockEntityBehaviorCropGrowth bebehaviorCG) {
                         EnumHandling handling = EnumHandling.PassThrough;
                         bool tempResult = bebehaviorCG.BeforeTryGrowCrop(farmland, currentTotalHours, ref handling);
-                        if (handling == EnumHandling.PreventDefault || handling == EnumHandling.PreventSubsequent) preventDefault = true;
+                        if (handling == EnumHandling.PreventDefault) preventDefault = true;
                         if (handling == EnumHandling.PreventSubsequent) return;
                     }
                 }
             }
-        }
-
-        private static AssetLocation defaultDeadCrop = new AssetLocation("deadcrop");
-        internal static bool KillCrop(IWorldAccessor world, BlockPos pos, EnumCropStressType deathReason) {
-            Block cropBlock = world.BlockAccessor.GetBlock(pos);
-
-            EnumHandling handling = EnumHandling.PassThrough;
-            bool result = false;
-            foreach(BlockBehavior behavior in cropBlock.BlockBehaviors) {
-                if (behavior is IBehaviorCropDeath cropDeathBehavior) {
-                    result = cropDeathBehavior.OnCropDeath(world, pos, deathReason, ref handling);
-                    if (handling == EnumHandling.PreventSubsequent) {
-                        return result;
-                    }
-                }
-            }
-
-            if (handling == EnumHandling.PreventDefault) return result;
-
-            // Default Behavior
-            Block deadCropBlock = world.BlockAccessor.GetBlock(defaultDeadCrop);
-            world.BlockAccessor.SetBlock(deadCropBlock.Id, pos);
-            var be = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityDeadCrop;
-            be.Inventory[0].Itemstack = new ItemStack(cropBlock);
-            be.deathReason = deathReason;
-            return false;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using AgronomyLib.src.Util.Extensions;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,7 +61,7 @@ namespace AgronomyLib {
                     if (!___allowcropDeath) dmg = ___damageAccum[i] = 0;
 
                     if (dmg > 48) {
-                        hasCrop = FarmlandMethods.KillCrop(Api.World, __instance.UpPos, (EnumCropStressType)i);
+                        hasCrop = !__instance.TryKillCrop((EnumCropStressType)i);
                     }
                 }
             }
