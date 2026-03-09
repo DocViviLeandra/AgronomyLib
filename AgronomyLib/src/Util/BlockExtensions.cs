@@ -10,6 +10,9 @@ namespace AgronomyLib {
         /// <summary>
         /// An extension method allowing a <see cref="Block"/>'s <see cref="BlockCropProperties"/> to be retrieved in a way that can be overridden, rather than via direct access to <see cref="Block.CropProps"/>.
         /// </summary>
+        /// <remarks>
+        /// AgronomyLib's <see cref="CropPropsTranspilerPatch"/> replaces all references in the vanilla code to <see cref="Block.CropProps"/> from outside a <see cref="Block"/> class with calls to this method.
+        /// </remarks>
         /// <param name="block">The <see cref="Block"/> this extension method is being invoked on</param>
         /// <param name="world"></param>
         /// <param name="pos">The position of the instance of the <see cref="Block"/></param>
