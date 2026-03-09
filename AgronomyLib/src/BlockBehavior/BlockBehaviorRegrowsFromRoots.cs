@@ -10,7 +10,7 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
-#nullable disable
+// NOTE: This is obsolete, it is retained only for reference, and only for now
 
 namespace AgronomyLib {
     /// <summary>

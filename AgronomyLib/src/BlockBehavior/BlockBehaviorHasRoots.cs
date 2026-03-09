@@ -11,6 +11,8 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
+// NOTE: This is obsolete, it is retained only for reference, and only for now
+
 namespace AgronomyLib {
     /// <summary>
     /// Specifies the properties of the roots for the crop.
