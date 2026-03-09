@@ -11,6 +11,8 @@ using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
 namespace AgronomyLib {
+    // TODO: With all the under-the-hood changes since this was written, it likely needs to be tested again
+
     /// <summary>
     /// Crops with this behavior will need to vernalize (as fruit trees do) in order to finish their development - when the crop reaches the stage specified with "maxStageBeforeVernalization", it will stop growing until it becomes vernalized.
     /// Uses the code "AgronomyLib.RequiresVernalization"
