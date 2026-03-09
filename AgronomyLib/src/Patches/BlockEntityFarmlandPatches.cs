@@ -1,4 +1,4 @@
-﻿using AgronomyLib.src.Util.Extensions;
+﻿using AgronomyLib;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -37,7 +37,7 @@ namespace AgronomyLib {
                 ___unripeHeatDamaged = false;
                 for (int i = 0; i < ___damageAccum.Length; i++) ___damageAccum[i] = 0;
             } else {
-                BlockCropProperties? cProps = cropBlock?.GetCropProps(Api.World, __instance.UpPos);
+                BlockCropProperties? cProps = cropBlock?.GetCropProps(Api, __instance.UpPos);
                 if (cProps != null && conds.Temperature < cProps.ColdDamageBelow) {
                     if (hasRipeCrop) {
                         ___ripeCropColdDamaged = true;
@@ -95,8 +95,9 @@ namespace AgronomyLib {
             // Execute behaviors that run after TryGrowCrop
             FarmlandMethods.OnGrowthCaller(ref __instance, cropBlock, __result, currentTotalHours);
         }
+        
 
-        [HarmonyPostfix]
+        [HarmonyPrefix]
         [HarmonyPatch(nameof(BlockEntityFarmland.GetCropStage))]
         public static bool GetCropStagePrefix(ref BlockEntityFarmland __instance, ref int __result, Block block) {
             __result = block.GetCurrentCropStage(__instance.Api.World, __instance.UpPos);

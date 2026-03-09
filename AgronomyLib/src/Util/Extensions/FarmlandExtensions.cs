@@ -5,7 +5,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.GameContent;
 
-namespace AgronomyLib.src.Util.Extensions {
+namespace AgronomyLib {
     /// <summary>
     /// Class containing extension methods that AgronomyLib adds to <see cref="BlockEntityFarmland"/>.
     /// </summary>

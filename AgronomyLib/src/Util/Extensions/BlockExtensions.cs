@@ -1,12 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
 namespace AgronomyLib {
     public static class BlockExtensions {
+
+        public static BlockCropProperties GetCropProps(this Block block) {
+            if (block is IBlockProvidesCropProps cropPropsProvider) {
+                return cropPropsProvider.CropProperties();
+            } else {
+                return block.CropProps;
+            }
+        }
+
         /// <summary>
         /// An extension method allowing a <see cref="Block"/>'s <see cref="BlockCropProperties"/> to be retrieved in a way that can be overridden, rather than via direct access to <see cref="Block.CropProps"/>.
         /// </summary>
@@ -14,12 +25,13 @@ namespace AgronomyLib {
         /// AgronomyLib's <see cref="CropPropsTranspilerPatch"/> replaces all references in the vanilla code to <see cref="Block.CropProps"/> from outside a <see cref="Block"/> class with calls to this method.
         /// </remarks>
         /// <param name="block">The <see cref="Block"/> this extension method is being invoked on</param>
-        /// <param name="world"></param>
+        /// <param name="Api"></param>
         /// <param name="pos">The position of the instance of the <see cref="Block"/></param>
         /// <returns>The <see cref="BlockCropProperties"/> of the <see cref="Block"/>. If the <see cref="Block"/> implements <see cref="IBlockProvidesCropProps"/>, it will retrieve the <see cref="BlockCropProperties"/> via the method it provides, instead of direct access.</returns>
-        public static BlockCropProperties GetCropProps(this Block block, IWorldAccessor world, BlockPos pos) {
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static BlockCropProperties GetCropProps(this Block block, ICoreAPI Api, BlockPos pos) {
             if (block is IBlockProvidesCropProps cropPropsProvider) {
-                return cropPropsProvider.CropProperties(world, pos);
+                return cropPropsProvider.CropProperties(Api.World, pos);
             } else {
                 return block.CropProps;
             }
