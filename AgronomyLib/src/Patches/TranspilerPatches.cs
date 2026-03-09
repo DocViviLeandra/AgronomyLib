@@ -13,10 +13,10 @@ using Vintagestory.GameContent;
 namespace AgronomyLib {
 
     /// <summary>
-    /// This transpiler replaces all accesses to Block.CropProps in the specified methods with calls to BlockExtensions.GetCropProps, allowing crop classes to provide crop properties by method.
+    /// This transpiler replaces all accesses to <see cref="Block.CropProps"/> in the specified methods with calls to <see cref="BlockExtensions.GetCropProps(Block, ICoreAPI, BlockPos)"/>, allowing crop classes to provide crop properties by method.
     /// </summary>
     [HarmonyPatch]
-    public static class CropPropsTranspilerPatch {
+    public static class FarmlandTranspilerPatch {
         public static IEnumerable<MethodBase> TargetMethods() {
             return [
                 AccessTools.Method(typeof(BlockEntitySoilNutrition), "beginIntervalledUpdate"),
@@ -29,8 +29,6 @@ namespace AgronomyLib {
                 AccessTools.Method(typeof(BlockEntityFarmland), nameof(BlockEntityFarmland.GetCrop)),
                 AccessTools.Method(typeof(BlockEntityFarmland), nameof(BlockEntityFarmland.GetDrops)),
                 AccessTools.Method(typeof(BlockEntityFarmland), nameof(BlockEntityFarmland.GetBlockInfo)),
-
-                //AccessTools.Method(typeof(ItemPlantableSeed), nameof(ItemPlantableSeed.GetHeldItemInfo)),
             ];
         }
 
@@ -52,6 +50,39 @@ namespace AgronomyLib {
                         CodeInstruction.LoadArgument(0),
                         CodeInstruction.LoadField(typeof(BlockEntitySoilNutrition), "upPos"),
                         CodeInstruction.Call((Block block, ICoreAPI api, BlockPos pos) => block.GetCropProps(api, pos))
+                        ])
+                    .AddLabels(labels)
+                    .Advance();
+                });
+
+            return codeMatcher.Instructions();
+        }
+    }
+
+    /// <summary>
+    /// This transpiler replaces all accesses to <see cref="Block.CropProps"/> in the specified methods with calls to <see cref="BlockExtensions.GetCropProps(Block)"/>, allowing crop classes to provide crop properties by method.
+    /// </summary>
+    [HarmonyPatch]
+    public static class SeedTranspilerPatch {
+        public static IEnumerable<MethodBase> TargetMethods() {
+            return [
+                AccessTools.Method(typeof(ItemPlantableSeed), nameof(ItemPlantableSeed.GetHeldItemInfo)),
+                ];
+        }
+
+        [HarmonyTranspiler]
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il) {
+            var codeMatcher = new CodeMatcher(instructions, il);
+
+            codeMatcher.MatchStartForward(
+                CodeMatch.LoadsField(AccessTools.Field(typeof(Block), "CropProps"))
+                )
+                .Repeat(matchAction: cm => {
+                    var labels = cm.Instruction.labels;
+
+                    cm.RemoveInstruction()
+                    .Insert([
+                        CodeInstruction.Call((Block block) => block.GetCropProps())
                         ])
                     .AddLabels(labels)
                     .Advance();
