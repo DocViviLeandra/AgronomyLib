@@ -15,6 +15,7 @@ namespace AgronomyLib {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(ItemScythe.CanMultiBreak))]
         public static bool CanMultiBreakPrefix(ref bool __result, Block block) {
+            // TODO: This could use a refactor - maybe depend on an interface for behaviors, rather than a single hardcoded behavior?
             if (block.HasBlockBehavior<BlockBehaviorUnscytheable>()) {
                 __result = false;
                 return false;

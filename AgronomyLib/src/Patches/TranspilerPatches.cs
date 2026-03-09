@@ -14,7 +14,7 @@ namespace AgronomyLib {
     /// This transpiler replaces all accesses to Block.CropProps in the specified methods with calls to BlockExtensions.GetCropProps, allowing crop classes to provide crop properties by method.
     /// </summary>
     [HarmonyPatch]
-    public static class TranspilerPatches {
+    public static class CropPropsTranspilerPatch {
         public static IEnumerable<MethodBase> TargetMethods() {
             return [
                 AccessTools.Method(typeof(BlockEntitySoilNutrition), "beginIntervalledUpdate"),
