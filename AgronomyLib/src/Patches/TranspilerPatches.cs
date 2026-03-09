@@ -44,14 +44,9 @@ namespace AgronomyLib {
                 )
                 .Repeat(matchAction: cm => {
                     var labels = cm.Instruction.labels;
-                    //cm.SetInstruction(
-                    //    CodeInstruction.Call((Block block) => block.GetCropProps())
-                    //    ).AddLabels(labels).Advance();
-
                     
                     cm.RemoveInstruction()
                     .Insert([
-                        //CodeInstruction.Call(typeof(BlockEntityFarmland), nameof(BlockEntityFarmland.GetCrop)),
                         CodeInstruction.LoadArgument(0),
                         CodeInstruction.LoadField(typeof(BlockEntity), "Api"),
                         CodeInstruction.LoadArgument(0),
@@ -60,12 +55,6 @@ namespace AgronomyLib {
                         ])
                     .AddLabels(labels)
                     .Advance();
-                    
-                    /*
-                    cm.SetInstruction(
-                        CodeInstruction.Call(typeof(BlockExtensions), nameof(BlockExtensions.GetCropProps))
-                    ).AddLabels(labels).Advance();
-                    */
                 });
 
             return codeMatcher.Instructions();
