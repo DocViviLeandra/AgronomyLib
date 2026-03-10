@@ -13,6 +13,8 @@ namespace AgronomyLib {
 
         public abstract BlockCropProperties CropProperties(IWorldAccessor world, BlockPos pos);
 
-        public abstract int CurrentStage(IWorldAccessor world, BlockPos pos);
+        public abstract int CropStage();
+
+        public abstract int CropStage(IWorldAccessor world, BlockPos pos);
     }
 }

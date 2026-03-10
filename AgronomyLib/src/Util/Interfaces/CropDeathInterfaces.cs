@@ -15,20 +15,25 @@ namespace AgronomyLib {
         /// <summary>
         /// Called when something attempts to kill the crop represented by this block; returns false if it should be prevented from do so. MUST call <see cref="DoKillCrop"/>, if the crop is killed here.
         /// </summary>
+        /// <remarks>
+        /// Default implementation simply calls <see cref="DoKillCrop(IWorldAccessor, BlockPos, EnumCropStressType, BlockEntityFarmland?)"/> and then returns true.
+        /// </remarks>
         /// <param name="world"></param>
         /// <param name="pos">The position of the crop.</param>
         /// <param name="deathReason">The cause of the crop's death.</param>
         /// <param name="farmland">The farmland on which the crop is growing, if it is growing on farmland.</param>
         /// <returns>false if something prevents the crop from dying</returns>
         public virtual bool TryKillCrop(IWorldAccessor world, BlockPos pos, EnumCropStressType deathReason, BlockEntityFarmland? farmland = null) {
-            return DoKillCrop(world, pos, deathReason, farmland);
+            DoKillCrop(world, pos, deathReason, farmland);
+
+            return true;
         }
 
         /// <summary>
         /// Called when something DOES kill the crop represented by this block; should handle all crop death logic.
         /// </summary>
         /// <remarks>
-        /// The only method here with a default implementation.
+        /// Default implementation is identical to vanilla crop death behavior.
         /// </remarks>
         /// <param name="world"></param>
         /// <param name="pos">The position of the crop.</param>

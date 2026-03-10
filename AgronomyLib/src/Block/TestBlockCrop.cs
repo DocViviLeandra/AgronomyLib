@@ -27,7 +27,11 @@ namespace AgronomyLib {
             };
         }
 
-        public int CurrentStage(IWorldAccessor world, BlockPos pos) {
+        public int CropStage() {
+            return CurrentCropStage;
+        }
+
+        public int CropStage(IWorldAccessor world, BlockPos pos) {
             BlockCrop block = world.BlockAccessor.GetBlock(pos) as BlockCrop;
             return block.CurrentCropStage;
         }

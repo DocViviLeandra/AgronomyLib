@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 
@@ -62,6 +63,11 @@ namespace AgronomyLib {
 
                     if (dmg > 48) {
                         hasCrop = !__instance.TryKillCrop((EnumCropStressType)i);
+
+                        // Certain death behaviors may leave a living crop behind, so we need to check for that.
+                        if (__instance.GetCrop() != null) {
+                            hasCrop = true;
+                        }
                     }
                 }
             }
@@ -101,6 +107,25 @@ namespace AgronomyLib {
         [HarmonyPatch(nameof(BlockEntityFarmland.GetCropStage))]
         public static bool GetCropStagePrefix(ref BlockEntityFarmland __instance, ref int __result, Block block) {
             __result = block.GetCurrentCropStage(__instance.Api.World, __instance.UpPos);
+            return false;
+        }
+
+        /// <summary>
+        /// Reimplementation which uses <see cref="FarmlandExtensions.TryKillCrop(BlockEntityFarmland, EnumCropStressType)"/>
+        /// </summary>
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(BlockEntityFarmland.ConsumeOnePortion))]
+        public static bool ConsumeOnePortionPrefix(ref BlockEntityFarmland __instance, ref float __result, Entity entity) {
+            ICoreAPI Api = __instance.Api;
+
+            Block cropBlock = __instance.GetCrop();
+            if (cropBlock == null) {
+                __result = 0;
+                return false;
+            }
+
+            __instance.TryKillCrop(EnumCropStressType.Eaten);
+            __result = 1f;
             return false;
         }
     }
