@@ -14,6 +14,7 @@ namespace AgronomyLib {
         /// </summary>
         /// <param name="block">The <see cref="Block"/> this extension method is being invoked on</param>
         /// <returns>The <see cref="BlockCropProperties"/> of the <see cref="Block"/>. If the <see cref="Block"/> implements <see cref="IBlockProvidesCropProps"/>, it will retrieve the <see cref="BlockCropProperties"/> via the method it provides, instead of direct access.</returns>
+        [MethodImpl(MethodImplOptions.PreserveSig)]
         public static BlockCropProperties GetCropProps(this Block block) {
             if (block is IBlockProvidesCropProps cropPropsProvider) {
                 return cropPropsProvider.CropProperties();
@@ -32,7 +33,7 @@ namespace AgronomyLib {
         /// <param name="Api"></param>
         /// <param name="pos">The position of the instance of the <see cref="Block"/></param>
         /// <returns>The <see cref="BlockCropProperties"/> of the <see cref="Block"/>. If the <see cref="Block"/> implements <see cref="IBlockProvidesCropProps"/>, it will retrieve the <see cref="BlockCropProperties"/> via the method it provides, instead of direct access.</returns>
-        [MethodImpl(MethodImplOptions.NoInlining)]
+        [MethodImpl(MethodImplOptions.PreserveSig)]
         public static BlockCropProperties GetCropProps(this Block block, ICoreAPI Api, BlockPos pos) {
             if (block is IBlockProvidesCropProps cropPropsProvider) {
                 return cropPropsProvider.CropProperties(Api.World, pos);
@@ -41,11 +42,36 @@ namespace AgronomyLib {
             }
         }
 
+        /// <summary>
+        /// An extension method allowing a <see cref="Block"/> that represents a crop to have its crop stage retrieved in a way that can be overridden, rather than via just parsing the code. This one retrieves it for the <see cref="Block"/> in general.
+        /// </summary>
+        /// <param name="block">The <see cref="Block"/> this method is being invoked on.</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.PreserveSig)]
+        public static int GetCurrentCropStage(this Block block) {
+            if (block is IBlockProvidesCropProps cropPropsProvider) {
+                return cropPropsProvider.CropStage();
+            } else if (block is BlockCrop cropBlock) {
+                return cropBlock.CurrentCropStage;
+            } else {
+                int.TryParse(block.LastCodePart(), out int stage);
+                return stage;
+            }
+        }
+
+        /// <summary>
+        /// An extension method allowing a <see cref="Block"/> that represents a crop to have its crop stage retrieved in a way that can be overridden, rather than via just parsing the code. This overload retrieves it for the <see cref="Block"/> at a specific location in-world.
+        /// </summary>
+        /// <param name="block">The <see cref="Block"/> this method is being invoked on.</param>
+        /// <param name="world"></param>
+        /// <param name="pos">The position in-world of the <see cref="Block"/> this is being invoked on.</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.PreserveSig)]
         public static int GetCurrentCropStage(this Block block, IWorldAccessor world, BlockPos pos) {
             if (block is IBlockProvidesCropProps cropPropsProvider) {
-                return cropPropsProvider.CurrentStage(world, pos);
+                return cropPropsProvider.CropStage(world, pos);
             } else if (block is BlockCrop cropBlock) {
-                return cropBlock.CurrentStage();
+                return cropBlock.CurrentCropStage;
             } else {
                 int.TryParse(block.LastCodePart(), out int stage);
                 return stage;
